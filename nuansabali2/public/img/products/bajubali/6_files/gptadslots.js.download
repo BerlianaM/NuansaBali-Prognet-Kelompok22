@@ -1,0 +1,235 @@
+'use strict';
+
+var PUSHTIMEOUT = 2500;
+var sticky = new Sticky();
+var handler = function() {
+  var keys = Object.keys(sticky.objects);
+  for (var i = 0; i < keys.length; i++) {
+    if (typeof sticky.objects[keys[i]]['stickied'] === 'undefined') {
+      sticky.objects[keys[i]]['stickied'] = false;
+    }
+    var target = $(sticky.objects[keys[i]].target);
+    if (typeof sticky.objects[keys[i]].marginTop === 'undefined') {
+      sticky.objects[keys[i]].marginTop = target.css('marginTop');
+    }
+    target.css('marginTop', sticky.objects[keys[i]].marginTop);
+    if (window.scrollY >= sticky.objects[keys[i]].minThreshold && window.scrollY <= sticky.objects[keys[i]].maxThreshold) {
+      sticky.makeStickied(sticky.objects[keys[i]]);
+    } else {
+      sticky.makeUnstickied(sticky.objects[keys[i]]);
+      if (sticky.objects[keys[i]].overflow) {
+        if (window.scrollY > sticky.objects[keys[i]].maxThreshold && (sticky.objects[keys[i]].maxThreshold > sticky.objects[keys[i]].minThreshold)) {
+          target.css('marginTop', sticky.objects[keys[i]].stoppedAt + 'px');
+        }
+      }
+    }
+  }
+  sticky.prevY = JSON.parse(JSON.stringify(window.scrollY));
+};
+sticky.setHandler(handler).init();
+
+var gptadslotsCB = {
+  renderEnded: function(caller, cb) {
+    if (typeof cb === 'function') {
+      cb();
+    }
+  },
+  Leaderboard: {
+    divId: '',
+    sticky: function() {
+      setTimeout(function () {
+        var minThreshold = $('.ad-leaderboard-frame').offset().top;
+        var maxThreshold = minThreshold + 280;
+        sticky.pushObject('Leaderboard', {
+          target: '.ad-leaderboard-frame',
+          minThreshold: minThreshold,
+          maxThreshold: maxThreshold,
+          stickyCls: 'ad-leaderboard-sticky',
+          overflow: false
+        });
+      }, PUSHTIMEOUT);
+    },
+    renderEnded: function(renderEnded, divId) {
+      this.divId = divId;
+      gptadslotsCB.renderEnded('Leaderboard', this.sticky.bind(this));
+      if (typeof renderEnded === 'function') {
+        renderEnded();
+      }
+    },
+  },
+  Leaderboard_SearchPage: {
+    divId: '',
+    sticky: function() {
+      setTimeout(function () {
+        var minThreshold = $('.ad-leaderboard-frame').offset().top;
+        var maxThreshold = minThreshold + 280;
+        sticky.pushObject('Leaderboard', {
+          target: '.ad-leaderboard-frame',
+          minThreshold: minThreshold,
+          maxThreshold: maxThreshold,
+          stickyCls: 'ad-leaderboard-sticky',
+          overflow: false
+        });
+      }, PUSHTIMEOUT);
+    },
+    renderEnded: function(renderEnded, divId) {
+      this.divId = divId;
+      gptadslotsCB.renderEnded('Leaderboard_SearchPage', this.sticky.bind(this));
+      if (typeof renderEnded === 'function') {
+        renderEnded();
+      }
+    },
+  },
+  Skyscraper_Right: {
+    divId: '',
+    sticky: function() {
+      var target = '.skyscraper-right';
+      var divId = this.divId;
+      setTimeout(function() {
+        var height = $('.listHandler').height();
+        var div = document.getElementById(divId);
+        if (null !== div) {
+          var minThreshold = $(target).offset().top;
+          sticky.pushObject('Skyscraper_Right', {
+            target: target,
+            minThreshold: minThreshold,
+            maxThreshold: (minThreshold + height) - div.offsetHeight,
+            stickyCls: 'skyscraper-sticky',
+            overflow: true,
+            stoppedAt: (height - div.offsetHeight)
+          });
+        }
+      }, PUSHTIMEOUT);
+    },
+    renderEnded: function(renderEnded, divId) {
+      this.divId = divId;
+      gptadslotsCB.renderEnded('Skyscraper_Right', this.sticky.bind(this));
+      if (typeof renderEnded === 'function') {
+        renderEnded();
+      }
+    },
+  },
+  Skyscraper_Right_SearchPage: {
+    divId: '',
+    sticky: function() {
+      var target = '.skyscraper-right';
+      var divId = this.divId;
+      setTimeout(function() {
+        var height = $('.listHandler').height();
+        var div = document.getElementById(divId);
+        if (null !== div) {
+          var minThreshold = $(target).offset().top;
+          sticky.pushObject('Skyscraper_Right', {
+            target: target,
+            minThreshold: minThreshold,
+            maxThreshold: (minThreshold + height) - div.offsetHeight,
+            stickyCls: 'skyscraper-sticky',
+            overflow: true,
+            stoppedAt: (height - div.offsetHeight)
+          });
+        }
+      }, PUSHTIMEOUT);
+    },
+    renderEnded: function(renderEnded, divId) {
+      this.divId = divId;
+      gptadslotsCB.renderEnded('Skyscraper_Right_SearchPage', this.sticky.bind(this));
+      if (typeof renderEnded === 'function') {
+        renderEnded();
+      }
+    },
+  },
+  Skyscraper_Left: {
+    divId: '',
+    sticky: function() {
+      var divId = this.divId;
+      var div = $('#' + divId);
+      if (div.width() === 160) {
+        div.css('marginLeft', '-170px');
+      }
+      var target = '.skyscraper-left';
+      setTimeout(function() {
+        var height = $('.listHandler').height();
+        var div = document.getElementById(divId);
+        if (null !== div) {
+          var minThreshold = $(target).offset().top;
+          sticky.pushObject('Skyscraper_Left', {
+            target: target,
+            minThreshold: minThreshold,
+            maxThreshold: (minThreshold + height) - div.offsetHeight,
+            stickyCls: 'skyscraper-sticky',
+            overflow: true,
+            stoppedAt: (height - div.offsetHeight)
+          });
+        }
+      }, PUSHTIMEOUT);
+    },
+    renderEnded: function(renderEnded, divId) {
+      this.divId = divId;
+      gptadslotsCB.renderEnded('Skyscraper_Left', this.sticky.bind(this));
+      if (typeof renderEnded === 'function') {
+        renderEnded();
+      }
+    },
+  },
+  Skyscraper_Left_SearchPage: {
+    divId: '',
+    sticky: function() {
+      var divId = this.divId;
+      var div = $('#' + divId);
+      if (div.width() === 160) {
+        div.css('marginLeft', '-170px');
+      }
+      var target = '.skyscraper-left';
+      setTimeout(function() {
+        var height = $('.listHandler').height();
+        var div = document.getElementById(divId);
+        if (null !== div) {
+          var minThreshold = $(target).offset().top;
+          sticky.pushObject('Skyscraper_Left', {
+            target: target,
+            minThreshold: minThreshold,
+            maxThreshold: (minThreshold + height) - div.offsetHeight,
+            stickyCls: 'skyscraper-sticky',
+            overflow: true,
+            stoppedAt: (height - div.offsetHeight)
+          });
+        }
+      }, PUSHTIMEOUT);
+    },
+    renderEnded: function(renderEnded, divId) {
+      this.divId = divId;
+      gptadslotsCB.renderEnded('Skyscraper_Left_SearchPage', this.sticky.bind(this));
+      if (typeof renderEnded === 'function') {
+        renderEnded();
+      }
+    },
+  },
+  Giant_Banner: {
+    renderEnded: function (renderEnded, divId) {
+      // temporary disabled: due to buggy
+      // TODO:
+      // Fix semi-sticky scroll
+      /*
+      var div = $('#' + divId);
+      var target = '.ad-giant-banner-container';
+      $('.ad-giant-banner-frame').css({
+        width: div.width() + 'px',
+        height: $(target).height() + 'px',
+      });
+      setTimeout(function () {
+        var minThreshold = $(target).offset().top;
+        sticky.pushObject('Giant_Banner', {
+          target: target,
+          minThreshold: minThreshold,
+          maxThreshold: minThreshold + 100,
+          stickyCls: 'giant-banner-sticky',
+          overflow: false
+        });
+      }, PUSHTIMEOUT);
+      */
+      if (typeof renderEnded === 'function') {
+        renderEnded();
+      }
+    },
+  },
+};

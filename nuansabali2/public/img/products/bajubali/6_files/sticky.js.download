@@ -1,0 +1,49 @@
+var Sticky = function() {
+  this.scrollInitialized = false;
+  this.prevY = 0;
+  this.objects = {};
+};
+
+Sticky.prototype = {
+  handler: null,
+  setHandler: function(handler) {
+    this.handler = handler;
+    return this;
+  },
+  init: function() {
+    if (!this.scrollInitialized) {
+      this.scrollInitialized = true;
+      this.addEventListener();
+    }
+  },
+  makeStickied: function(object) {
+    if (!object.stickied) {
+      $(object.target).addClass(object.stickyCls);
+      object.stickied = true;
+    }
+  },
+  makeUnstickied: function(object) {
+    if (object.stickied) {
+      $(object.target).removeClass(object.stickyCls);
+      object.stickied = false;
+    }
+  },
+  pushObject: function(key, object) {
+    if (typeof this.objects[key] !== 'undefined') {
+      delete this.objects[key];
+    }
+    this.objects[key] = object;
+    this.reInitialize();
+  },
+  reInitialize: function() {
+    this.scrollInitialized = false;
+    this.removeEventListener();
+    this.init();
+  },
+  addEventListener: function() {
+    window.addEventListener('scroll', this.handler, true);
+  },
+  removeEventListener: function() {
+    window.removeEventListener('scroll', this.handler, true);
+  },
+};
